@@ -1,0 +1,90 @@
+body {
+  background-image: url(images/mmbackgroundblur.png);
+  background-repeat: repeat;
+}
+
+/**************** FONT STYLE AND SIZE START ****************/
+
+.header {
+  font-family: "EB Garamond";
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  font-size: 4rem;
+}
+
+p,
+td {
+  font-family: "EB Garamond";
+  font-size: 2rem;
+  font-style: italic;
+}
+
+th {
+  font-family: "Mason Sans OT";
+  text-transform: uppercase;
+  font-size: 2.5rem;
+  padding: 50px 80px 50px 80px;
+}
+
+/**************** FONT STYLE AND SIZE DONE ****************/
+
+/**************** BUTTONS START ****************/
+button {
+  background-color: transparent;
+  border: 1px solid black;
+  font-size: 1.5rem;
+  font-family: "EB Garamond";
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+/**************** BUTTONS DONE ****************/
+
+/**************** INTERFACE START ****************/
+td {
+  padding-left: 80px;
+}
+
+[data-sort="name"],
+[data-sort="lastname"],
+[data-sort="house"] {
+  cursor: pointer;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 300px;
+}
+
+.logo {
+  width: 20%;
+  margin-bottom: 100px;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.sort_p {
+  margin-left: 50px;
+}
+/**************** INTERFACE SLUT ****************/
+
+/**************** POP UP START ****************/
+.hide {
+  display: none;
+}
+
+#popUp {
+  overflow: scroll;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80vh;
+  text-align: center;
+  background-color: white;
+}
+
+/**************** POP UP SLUT ****************/
