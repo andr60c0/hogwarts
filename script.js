@@ -3,7 +3,7 @@
 window.addEventListener("DOMContentLoaded", start);
 
 let allStudents = [];
-let currentFilter = "*";
+let currentFilter = "all_students";
 let currentSort = "name";
 
 //The prototype for all students
@@ -20,12 +20,12 @@ function start() {
   console.log("start");
 
   //TODO: Add event listeners to filter and sort buttons
-  document.querySelectorAll(".filter").forEach((button) => {
-    button.addEventListener("click", selectFilter);
+  document.querySelectorAll("#filterlist").forEach((option) => {
+    option.addEventListener("change", selectFilter);
   });
 
-  document.querySelectorAll(".sort").forEach((th) => {
-    th.addEventListener("click", selectSorting);
+  document.querySelectorAll("#sortlist").forEach((option) => {
+    option.addEventListener("change", selectSorting);
   });
 
   loadJSON();
@@ -47,8 +47,8 @@ async function loadJSON() {
 
 function selectFilter() {
   console.log("selectFilter");
-  currentFilter = this.dataset.filter;
-  console.log(currentFilter);
+  currentFilter = this.value;
+  console.log("BLABLA", currentFilter);
   buildList();
 }
 
@@ -58,8 +58,8 @@ function setFilter() {
     const onlyGryffindor = allStudents.filter(inGryffindor);
     return onlyGryffindor;
   } else if (currentFilter === "hufflepuff") {
-    const onlyHuffelpuff = allStudents.filter(inHuffelpuff);
-    return onlyHuffelpuff;
+    const onlyHufflepuff = allStudents.filter(inHufflepuff);
+    return onlyHufflepuff;
   } else if (currentFilter === "ravenclaw") {
     const onlyRavenclaw = allStudents.filter(inRavenclaw);
     return onlyRavenclaw;
@@ -73,7 +73,7 @@ function setFilter() {
 
 function selectSorting() {
   console.log("selectSorting");
-  currentSort = this.dataset.sort;
+  currentSort = this.value;
   buildList();
 }
 
@@ -102,8 +102,8 @@ function prepareObjects(jsonData) {
 function prepareObject(jsonObject) {
   console.log("prepareObject");
   const student = Object.create(Student);
-  const house = jsonObject.house.trim();
 
+  const house = jsonObject.house.trim();
   const fullName = jsonObject.fullname.trim();
 
   //Splitting the full name to first name,middle name, nickname and last name
@@ -113,23 +113,72 @@ function prepareObject(jsonObject) {
   } else {
     firstName = fullName;
   }
-  const middleName = fullName.substring(
-    fullName.indexOf(" ") + 1,
-    fullName.lastIndexOf(" ")
-  );
-  let lastName;
-  if (fullName.includes(" ")) {
-    //TODO: Make capitalize work on lastName
-    lastName = fullName.substring(fullName.lastIndexOf(" ")).trim();
-    lastName =
-      lastName.substring(0, 1).toUpperCase() +
-      lastName.substring(1).toLowerCase();
+
+  let middleName;
+  if (
+    fullName.includes(" ") &&
+    fullName.lastIndexOf(" ") >= 0 &&
+    !fullName.includes('"')
+  ) {
+    middleName = fullName
+      .substring(fullName.indexOf(" ") + 1, fullName.lastIndexOf(" "))
+      .trim();
+    middleName = middleName.trim();
+    if (middleName.length === 0) {
+      middleName = "";
+    }
+  } else {
+    middleName = "";
   }
 
+  let nickName;
+  if (fullName.includes('"')) {
+    nickName = fullName.substring(
+      fullName.indexOf(" ") + 1,
+      fullName.lastIndexOf(" ")
+    );
+    nickName =
+      nickName.substring(0, 2).toUpperCase() +
+      nickName.substring(2).toLowerCase();
+  } else {
+    nickName = "";
+  }
+
+  let lastName;
+  if (fullName.includes(" ")) {
+    lastName = fullName.substring(fullName.lastIndexOf(" ")).trim();
+    if (lastName.includes("-")) {
+      lastName =
+        lastName.substring(0, lastName.indexOf("-")) +
+        lastName
+          .substring(lastName.indexOf("-"), lastName.indexOf("-") + 2)
+          .toUpperCase() +
+        lastName.substring(lastName.indexOf("-") + 2).toLowerCase();
+    } else {
+      lastName =
+        lastName.substring(0, 1).toUpperCase() +
+        lastName.substring(1).toLowerCase();
+    }
+  } else {
+    lastName = "";
+  }
+
+  let image = lastName + "_" + firstName.substring(0, 1) + ".png";
+  if (image.includes("-")) {
+    image = image.substring(image.indexOf("-") + 1);
+  }
+  if (image.includes("Patil")) {
+    image = lastName + "_" + firstName + ".png";
+  }
+  image = image.toLowerCase();
+
+  //TODO: Make capitalize function work with middlename, nickname and lastname
   student.firstName = capitalize(firstName);
-  student.middlename = capitalize(middleName);
+  student.middlename = middleName;
+  student.nickname = nickName;
   student.lastName = lastName;
   student.house = capitalize(house);
+  student.image = image;
 
   return student;
 }
@@ -183,7 +232,15 @@ function showDetails(student) {
     popUp.classList.add("hide");
   });
   popUp.querySelector(".full_name").textContent =
-    student.firstName + " " + student.middlename + " " + student.lastName;
+    student.firstName +
+    " " +
+    student.middlename +
+    " " +
+    student.nickname +
+    " " +
+    student.lastName;
+  popUp.querySelector(".student_picture").src =
+    "/student_images/" + student.image;
   popUp.querySelector(".house").textContent = student.house;
 }
 
@@ -207,7 +264,7 @@ function inGryffindor(student) {
   }
 }
 
-function inHuffelpuff(student) {
+function inHufflepuff(student) {
   if (student.house === "Hufflepuff") {
     return true;
   } else {

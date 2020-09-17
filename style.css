@@ -28,8 +28,32 @@ th {
 
 /**************** FONT STYLE AND SIZE DONE ****************/
 
+/**************** FILTER,SORT AND SEARCH STYLING START ****************/
+select,
+input {
+  background-color: transparent;
+  border: 1px solid black;
+  font-size: 1.5rem;
+  font-family: "EB Garamond";
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+label,
+.search_wrapper {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-size: 2rem;
+  padding: 5px;
+  margin: 30px 50px 0 50px;
+  letter-spacing: 1px;
+}
+
+/**************** FILTER,SORT AND SEARCH STYLING DONE ****************/
+
 /**************** BUTTONS START ****************/
-button {
+button,
+option {
   background-color: transparent;
   border: 1px solid black;
   font-size: 1.5rem;
@@ -43,12 +67,6 @@ button {
 /**************** INTERFACE START ****************/
 td {
   padding-left: 80px;
-}
-
-[data-sort="name"],
-[data-sort="lastname"],
-[data-sort="house"] {
-  cursor: pointer;
 }
 
 table {
@@ -66,10 +84,14 @@ table {
   display: flex;
   justify-content: center;
 }
-
-.sort_p {
-  margin-left: 50px;
+[data-field="name"] {
+  cursor: pointer;
 }
+
+[data-field="name"]:hover {
+  font-size: 2.5rem;
+}
+
 /**************** INTERFACE SLUT ****************/
 
 /**************** POP UP START ****************/
