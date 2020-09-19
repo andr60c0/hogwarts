@@ -308,6 +308,10 @@ function showDetails(student) {
     document
       .querySelector(".prefect_button")
       .addEventListener("click", addPrefect);
+  } else {
+    document
+      .querySelector(".prefect_button")
+      .addEventListener("click", removePrefect);
   }
   //Removing the eventlistener from the prefect button and calling the function that checks if there is space for a prefect
   function addPrefect() {
@@ -319,6 +323,14 @@ function showDetails(student) {
     checkNumberOfPrefects(student);
   }
 
+  function removePrefect() {
+    console.log("removePrefect");
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", removePrefect);
+    removeAsPrefect(student);
+  }
+
   document.querySelector("#closebutton").addEventListener("click", () => {
     popUp.classList.add("hide");
   });
@@ -326,15 +338,32 @@ function showDetails(student) {
 
 function expelStudent(student) {
   console.log("expelStudent");
-  allStudents.splice(allStudents.indexOf(student), 1);
-
-  expelledStudents.push(student);
-  student.isExpelled = true;
-  document.querySelector(".expel_button").classList.add("hide");
+  if (student.isPrefect === true) {
+    document.querySelector("#confirmation").classList.remove("hide");
+    document.querySelector(".prefect_confirmation").textContent =
+      student.firstName +
+      " " +
+      student.lastName +
+      " is a prefect. To continue with expulsion, please remove student as prefect.";
+    document.querySelector(".ok_button").addEventListener("click", () => {
+      document.querySelector("#confirmation").classList.add("hide");
+    });
+  } else {
+    allStudents.splice(allStudents.indexOf(student), 1);
+    expelledStudents.push(student);
+    student.isExpelled = true;
+    document.querySelector(".expel_button").classList.add("hide");
+    showDetails(student);
+    buildList();
+  }
+}
+function removeAsPrefect(student) {
+  console.log("removeAsPrefect");
+  student.isPrefect = false;
   showDetails(student);
   buildList();
+  console.log(student);
 }
-
 //Checking the number of prefects in each house
 function checkNumberOfPrefects(student) {
   console.log("checkNumberOfPrefects");
@@ -359,13 +388,15 @@ function checkNumberOfPrefects(student) {
     buildList();
     // console.log(student);
   } else if (prefectArray.length > 1) {
-    removePrefect(student, prefectArray);
+    switchPrefect(student, prefectArray);
   }
 }
 
-function removePrefect(student, prefectArray) {
-  console.log("removePrefect");
+function switchPrefect(student, prefectArray) {
+  console.log("switchPrefect");
   document.querySelector("#remove_other").classList.remove("hide");
+  document.querySelector(".dialog_p").textContent =
+    "There can only be two prefects in each house. Choose which prefect shall be replaced:";
   const prefectButton1 = document.querySelector(".prefect1");
   const prefectButton2 = document.querySelector(".prefect2");
 
@@ -374,15 +405,15 @@ function removePrefect(student, prefectArray) {
   prefectButton2.textContent =
     prefectArray[1].firstName + " " + prefectArray[1].lastName;
 
-  prefectButton1.addEventListener("click", removePrefect1);
-  prefectButton2.addEventListener("click", removePrefect2);
+  prefectButton1.addEventListener("click", replacePrefect1);
+  prefectButton2.addEventListener("click", replacePrefect2);
 
-  function removePrefect1() {
-    console.log("removePrefect1");
+  function replacePrefect1() {
+    console.log("replacePrefect1");
     replacePrefect(prefectArray, student, prefectArray[0]);
   }
 
-  function removePrefect2() {
+  function replacePrefect2() {
     console.log("removePrefect2");
     replacePrefect(prefectArray, student, prefectArray[0]);
   }
