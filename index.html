@@ -8,72 +8,118 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1 class="header">Hacked Hogwarts Student List</h1>
-    <img class="logo" src="images/hogwartslogo.png" alt="hogwartslogo" />
-    <div class="wrapper">
-      <div class="search_wrapper">
-        Search Student:
-        <input type="text" id="search-input" placeholder=" Search" />
+    <!-- <h1 class="header">Hacked Hogwarts <br />Student List</h1> -->
+    <div class="interface_wrapper">
+      <div class="interface_col">
+        <img
+          class="headerpicture"
+          src="images/headerpicture.svg"
+          alt="headerpicture"
+        />
       </div>
-      <label id="filter_list">
-        Filter by:
-        <select name="filterlist" id="filterlist">
-          <option value="all_students" class="filter">All Students</option>
-          <option value="gryffindor" class="filter">Gryffindor</option>
-          <option value="hufflepuff" class="filter">Hufflepuff</option>
-          <option value="ravenclaw" class="filter">Ravenclaw</option>
-          <option value="slytherin" class="filter">Slytherin</option>
-        </select>
-      </label>
-      <label id="sort_list">
-        Sort by:
-        <select name="sortlist" id="sortlist">
-          <option value="name" class="sort">First name</option>
-          <option value="lastname" class="sort">Last Name</option>
-          <option value="house" class="sort">House</option>
-        </select>
-      </label>
+      <div class="interface_col">
+        <div class="wrapper">
+          <div class="search_wrapper">
+            Search Student:
+            <input type="text" id="search-input" placeholder=" Search" />
+          </div>
+          <label id="filter_list">
+            Filter by:
+            <select name="filterlist" id="filterlist">
+              <option value="all_students" class="filter">All Students</option>
+              <option value="gryffindor" class="filter">Gryffindor</option>
+              <option value="hufflepuff" class="filter">Hufflepuff</option>
+              <option value="ravenclaw" class="filter">Ravenclaw</option>
+              <option value="slytherin" class="filter">Slytherin</option>
+              <option value="prefects" class="filter">Prefects</option>
+              <option value="inq_squad" class="filter">
+                Inquisitorial Squad
+              </option>
+            </select>
+          </label>
+          <label id="sort_list">
+            Sort by:
+            <select name="sortlist" id="sortlist">
+              <option value="name" class="sort">First name</option>
+              <option value="lastname" class="sort">Last Name</option>
+              <option value="house" class="sort">House</option>
+            </select>
+          </label>
+        </div>
+        <div class="number_of_students">
+          <p class="gryffindor_students"></p>
+          <p class="hufflepuff_students"></p>
+          <p class="ravenclaw_students"></p>
+          <p class="slytherin_students"></p>
+          <p class="all_students"></p>
+        </div>
+        <table id="list">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Student name</th>
+              <th>House</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- student template will be copied and inserted here -->
+          </tbody>
+        </table>
+
+        <template id="student">
+          <tr>
+            <td data-field="prefect_logo">
+              <img src="" />
+            </td>
+            <td data-field="name">NAME</td>
+            <td data-field="lastname"></td>
+            <td data-field="house">HOUSE</td>
+          </tr>
+        </template>
+        <!-- <section id="popUp" class="hide"></section> -->
+        <section id="popUp" class="hide">
+          <article id="popUp_article">
+            <div class="sectionwrapper">
+              <div class="studentinfo_col">
+                <button id="closebutton">X</button><br /><br />
+                <img src="" class="student_picture" alt="student_picture" />
+                <div class="student_info">
+                  <p>STUDENT NAME</p>
+                  <p class="full_name"></p>
+                  <p>HOUSE</p>
+                  <p class="house"></p>
+                  <p>ENROLLMENT STATUS</p>
+                  <p class="enrollment_status">Enrolled</p>
+                  <button class="expell_button">Expell Student</button>
+                  <p>PREFECT STATUS</p>
+                  <p class="prefect_status">Not a prefect</p>
+                  <button class="prefect_button"></button>
+                  <p>BLOOD STATUS</p>
+                  <p class="blood_status"></p>
+                  <p>INQUISITORIAL SQUAD</p>
+                  <p class="inq_squad_status"></p>
+                  <button class="inq_button"></button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+        <div id="remove_other" class="hide">
+          <div class="dialog">
+            <button class="close_warning_button">X</button>
+            <h2>Attention!</h2>
+            <p>There can only be two prefects in each house.</p>
+            <p>Choose which prefect shall be replaced:</p>
+            <button class="prefect1"></button>
+            <button class="prefect2"></button>
+          </div>
+        </div>
+        <div id="confirmation" class="hide">
+          <p class="prefect_confirmation"></p>
+          <button class="ok_button">OK</button>
+        </div>
+      </div>
     </div>
-    <table id="list">
-      <thead>
-        <tr>
-          <th>Student name</th>
-          <th>House</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- student template will be copied and inserted here -->
-      </tbody>
-    </table>
-
-    <template id="student">
-      <tr>
-        <td data-field="name">NAME</td>
-        <td data-field="lastname"></td>
-        <td data-field="house">HOUSE</td>
-      </tr>
-    </template>
-    <section id="popUp" class="hide">
-      <article id="popUp_article">
-        <button id="closebutton">X</button>
-        <h1 class="full_name"></h1>
-        <img src="" class="student_picture" alt="student_picture" />
-        <p>HOUSE</p>
-        <p class="house"></p>
-        <p>ENROLLMENT STATUS</p>
-        <p class="enrollment_status">Enrolled</p>
-        <button class="expell_button">Expell Student</button>
-        <p>PREFECT STATUS</p>
-        <p class="prefect_status">Not a prefect</p>
-        <button class="prefect_button">Make as prefect</button>
-        <p>BLOOD STATUS</p>
-        <p class="blood_status"></p>
-        <p>INQUISITORIAL SQUAD</p>
-        <p class="inq_squad">Not a member</p>
-        <button class="inq_button">Make as member</button>
-      </article>
-    </section>
-
     <script src="script.js"></script>
   </body>
 </html>

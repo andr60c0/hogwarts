@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="46" height="48" viewBox="0 0 46 48">
+  <defs>
+    <clipPath id="clip-prefect_logo">
+      <rect width="46" height="48"/>
+    </clipPath>
+  </defs>
+  <g id="prefect_logo" clip-path="url(#clip-prefect_logo)">
+    <g id="p_logo" transform="translate(-314 -1160)">
+      <g id="Ellipse_1" data-name="Ellipse 1" transform="translate(314 1161)" fill="none" stroke="#a5619b" stroke-width="2">
+        <ellipse cx="23" cy="23.5" rx="23" ry="23.5" stroke="none"/>
+        <ellipse cx="23" cy="23.5" rx="22" ry="22.5" fill="none"/>
+      </g>
+      <text id="P" transform="translate(326 1157)" fill="#a5619b" font-size="40" font-family="EBGaramond-Regular, EB Garamond" letter-spacing="0.03em"><tspan x="0" y="40">P</tspan></text>
+    </g>
+  </g>
+</svg>
