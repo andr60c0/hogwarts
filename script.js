@@ -7,7 +7,7 @@ let gryffindorPrefects = [];
 let hufflepuffPrefects = [];
 let ravenclawPrefects = [];
 let slytherinPrefects = [];
-// let expelledStudents = [];
+let expelledStudents = [];
 let currentFilter = "all_students";
 let currentSort = "name";
 
@@ -21,14 +21,8 @@ const Student = {
   house: "",
   isPrefect: false,
   inInqSquad: false,
+  isExpelled: false,
 };
-
-// let prefects = {
-//   Gryffindor: 0,
-//   Hufflepuff: 0,
-//   Ravenclaw: 0,
-//   Slytherin: 0,
-// };
 
 function start() {
   console.log("start");
@@ -198,7 +192,7 @@ function prepareObject(jsonObject) {
 
   return student;
 }
-
+//Building the list going through both filtering and sorting and returning the updated list
 function buildList() {
   console.log("buildList");
   const currentList = setFilter();
@@ -213,6 +207,8 @@ function displayList(students) {
   //Clear the display
   document.querySelector("#list tbody").innerHTML = "";
 
+  //Showing number of students in each house + all Students
+  //TODO: Show number of expelled students
   document.querySelector(".gryffindor_students").textContent =
     "Students in Gryffindor: " +
     allStudents.filter((student) => student.house === "Gryffindor").length;
@@ -225,6 +221,8 @@ function displayList(students) {
   document.querySelector(".slytherin_students").textContent =
     "Students in Slytherin: " +
     allStudents.filter((student) => student.house === "Slytherin").length;
+  document.querySelector(".expelled_students").textContent =
+    "Expelled Students: " + expelledStudents.length;
 
   //Build a new list
   students.forEach(displayStudent);
@@ -270,7 +268,30 @@ function showDetails(student) {
   document.querySelector(".house").textContent = student.house;
   document.querySelector(".student_picture").src =
     "/student_images/" + student.image;
+  //EXPELLED
+  if (student.isExpelled === true) {
+    document.querySelector(".enrollment_status").textContent = "Expelled";
+    document.querySelector(".expel_button").textContent = "Re-enroll";
+  } else {
+    document.querySelector(".enrollment_status").textContent = "Enrolled";
+    document.querySelector(".expel_button").textContent = "Expel";
+  }
 
+  //Adding eventlistener to expel button
+
+  document
+    .querySelector(".expel_button")
+    .addEventListener("click", enrollmentStatus);
+
+  function enrollmentStatus() {
+    console.log("enrollmentStatus");
+    document
+      .querySelector(".expel_button")
+      .removeEventListener("click", enrollmentStatus);
+
+    expelStudent(student);
+  }
+  // PREFECTS
   if (student.isPrefect === true) {
     document.querySelector(".prefect_status").textContent = "Active prefect";
     document.querySelector(".prefect_button").textContent = "Remove as prefect";
@@ -279,12 +300,13 @@ function showDetails(student) {
     document.querySelector(".prefect_button").textContent = "Make as prefect";
   }
 
+  //Adding event listener to prefect button
   if (student.isPrefect === false) {
     document
       .querySelector(".prefect_button")
       .addEventListener("click", addPrefect);
   }
-
+  //Removing the eventlistener from the prefect button and calling the function that checks if there is space for a prefect
   function addPrefect() {
     console.log("addPrefect");
     document
@@ -297,9 +319,22 @@ function showDetails(student) {
   document.querySelector("#closebutton").addEventListener("click", () => {
     popUp.classList.add("hide");
   });
-  // document.querySelector("#popUp").appendChild(clone);
 }
 
+function expelStudent(student) {
+  console.log("expelStudent");
+  allStudents.splice(allStudents.indexOf(student), 1);
+  const expelledStudents = [];
+  expelledStudents.push(student);
+  student.isExpelled = true;
+  document.querySelector(".expel_button").classList.add("hide");
+  // console.log("expelledStudents", expelledStudents);
+  // console.log(student);
+  showDetails(student);
+  buildList();
+}
+
+//Checking the number of prefects in each house
 function checkNumberOfPrefects(student) {
   console.log("checkNumberOfPrefects");
   let prefectArray = [];
@@ -314,14 +349,14 @@ function checkNumberOfPrefects(student) {
     prefectArray = slytherinPrefects;
   }
 
-  console.log(prefectArray);
+  // console.log(prefectArray);
 
   if (prefectArray.length < 2) {
     student.isPrefect = true;
     prefectArray.push(student);
     showDetails(student);
     buildList();
-    console.log(student);
+    // console.log(student);
   } else if (prefectArray.length > 1) {
     removePrefect(student, prefectArray);
   }

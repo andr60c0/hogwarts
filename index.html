@@ -52,6 +52,7 @@
           <p class="ravenclaw_students"></p>
           <p class="slytherin_students"></p>
           <p class="all_students"></p>
+          <p class="expelled_students">0</p>
         </div>
         <table id="list">
           <thead>
@@ -69,7 +70,7 @@
         <template id="student">
           <tr>
             <td data-field="prefect_logo">
-              <img src="" />
+              <img class="prefect_logo" src="" />
             </td>
             <td data-field="name">NAME</td>
             <td data-field="lastname"></td>
@@ -89,8 +90,8 @@
                   <p>HOUSE</p>
                   <p class="house"></p>
                   <p>ENROLLMENT STATUS</p>
-                  <p class="enrollment_status">Enrolled</p>
-                  <button class="expell_button">Expell Student</button>
+                  <p class="enrollment_status"></p>
+                  <button class="expel_button"></button>
                   <p>PREFECT STATUS</p>
                   <p class="prefect_status">Not a prefect</p>
                   <button class="prefect_button"></button>
