@@ -8,6 +8,7 @@ let hufflepuffPrefects = [];
 let ravenclawPrefects = [];
 let slytherinPrefects = [];
 let expelledStudents = [];
+let bloodStatus = {};
 let currentFilter = "all_students";
 let currentSort = "name";
 
@@ -22,6 +23,7 @@ const Student = {
   isPrefect: false,
   inInqSquad: false,
   isExpelled: false,
+  bloodStatus: "",
 };
 
 function start() {
@@ -36,19 +38,27 @@ function start() {
     option.addEventListener("change", selectSorting);
   });
 
-  loadJSON();
+  //loadJSON();
+  loadJSON("https://petlatkea.dk/2020/hogwarts/students.json", prepareObjects);
+  loadJSON(
+    "https://petlatkea.dk/2020/hogwarts/families.json",
+    prepareBloodStatus
+  );
 }
 
-async function loadJSON() {
+async function loadJSON(url, callback) {
   console.log("loadJSON");
-  const response = await fetch(
-    "https://petlatkea.dk/2020/hogwarts/students.json"
-  );
-  const jsonData = await response.json();
+  // const response = await fetch(
+  //   "https://petlatkea.dk/2020/hogwarts/students.json"
+  // );
+  // const jsonData = await response.json();
 
   //when loaded, prepare data objects
-  prepareObjects(jsonData);
+  // prepareObjects(jsonData);
   //console.log(jsonData);
+  const response = await fetch(url);
+  const data = await response.json();
+  callback(data);
 }
 
 //Selecting filter and setting right filter
@@ -80,6 +90,9 @@ function setFilter() {
   } else if (currentFilter === "expelled") {
     const onlyExpelled = expelledStudents;
     return onlyExpelled;
+  } else if (currentFilter === "inq_squad") {
+    const onlyInqMembers = allStudents.filter(inInqSquad);
+    return onlyInqMembers;
   } else {
     return allStudents;
   }
@@ -110,6 +123,32 @@ function prepareObjects(jsonData) {
   allStudents = jsonData.map(prepareObject);
 
   buildList();
+}
+
+function prepareBloodStatus(jsonData) {
+  bloodStatus = jsonData;
+  console.log(bloodStatus);
+
+  allStudents.forEach((student) => {
+    if (
+      bloodStatus.pure.includes(student.lastName) === true &&
+      bloodStatus.half.includes(student.lastName) === false
+    ) {
+      student.bloodStatus = "Pure blood";
+    } else if (
+      bloodStatus.pure.includes(student.lastName) === true &&
+      bloodStatus.half.includes(student.lastName) === true
+    ) {
+      student.bloodStatus = "Pure blood";
+    } else if (
+      bloodStatus.pure.includes(student.lastName) === false &&
+      bloodStatus.half.includes(student.lastName) === true
+    ) {
+      student.bloodStatus = "Half blood";
+    } else {
+      student.bloodStatus = "Muggle blood";
+    }
+  });
 }
 
 function prepareObject(jsonObject) {
@@ -210,8 +249,7 @@ function displayList(students) {
   //Clear the display
   document.querySelector("#list tbody").innerHTML = "";
 
-  //Showing number of students in each house + all Students
-  //TODO: Show number of expelled students
+  //Showing number of students in each house + all Students + expelled students
   document.querySelector(".gryffindor_students").textContent =
     "Students in Gryffindor: " +
     allStudents.filter((student) => student.house === "Gryffindor").length;
@@ -271,7 +309,8 @@ function showDetails(student) {
   document.querySelector(".house").textContent = student.house;
   document.querySelector(".student_picture").src =
     "/student_images/" + student.image;
-  //EXPELLED
+
+  //EXPEL
   if (student.isExpelled === true) {
     document.querySelector(".enrollment_status").textContent = "Expelled";
     document.querySelector(".expel_button").textContent = "Re-enroll";
@@ -334,6 +373,38 @@ function showDetails(student) {
   document.querySelector("#closebutton").addEventListener("click", () => {
     popUp.classList.add("hide");
   });
+
+  //BLOOD STATUS
+  document.querySelector(".blood_status").textContent = student.bloodStatus;
+
+  //INQUISITORIAL SQUAD
+
+  if (student.inInqSquad === true) {
+    document.querySelector(".inq_squad_status").textContent = "Active member";
+    document.querySelector(".inq_button").textContent = "Remove as member";
+  } else {
+    document.querySelector(".inq_squad_status").textContent = "Not a member";
+    document.querySelector(".inq_button").textContent = "Make as member";
+  }
+
+  document
+    .querySelector(".inq_button")
+    .addEventListener("click", inqSquadStatus);
+  document
+    .querySelector(".inq_button")
+    .addEventListener("click", inqSquadStatus);
+
+  function inqSquadStatus() {
+    console.log("inqSquadStatus");
+    document
+      .querySelector(".inq_button")
+      .removeEventListener("click", inqSquadStatus);
+    if (student.inInqSquad === false) {
+      addToInqSquad(student);
+    } else {
+      removeFromInqSquad(student);
+    }
+  }
 }
 
 function expelStudent(student) {
@@ -445,6 +516,29 @@ function replacePrefect(prefectArray, student, replacedStudent) {
   buildList();
 }
 
+function addToInqSquad(student) {
+  console.log("addToInqSquad");
+  if (student.bloodStatus === "Pure blood") {
+    student.inInqSquad = true;
+    showDetails(student);
+    buildList();
+  } else {
+    document.querySelector("#confirmation").classList.remove("hide");
+    document.querySelector(".prefect_confirmation").textContent =
+      "This student cannot be a member of Inquisitorial squad do to their blood status";
+    document.querySelector(".ok_button").addEventListener("click", () => {
+      document.querySelector("#confirmation").classList.add("hide");
+    });
+  }
+}
+
+function removeFromInqSquad(student) {
+  console.log("removeFromInqSquad");
+  student.inInqSquad = false;
+  showDetails(student);
+  buildList();
+}
+
 //Cleaning up data functions
 
 function capitalize(str) {
@@ -459,6 +553,14 @@ function capitalize(str) {
 
 function isPrefect(student) {
   if (student.isPrefect === true) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function inInqSquad(student) {
+  if (student.inInqSquad === true) {
     return true;
   } else {
     return false;
