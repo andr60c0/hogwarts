@@ -77,6 +77,9 @@ function setFilter() {
   } else if (currentFilter === "prefects") {
     const onlyPrefects = allStudents.filter(isPrefect);
     return onlyPrefects;
+  } else if (currentFilter === "expelled") {
+    const onlyExpelled = expelledStudents;
+    return onlyExpelled;
   } else {
     return allStudents;
   }
@@ -324,12 +327,10 @@ function showDetails(student) {
 function expelStudent(student) {
   console.log("expelStudent");
   allStudents.splice(allStudents.indexOf(student), 1);
-  const expelledStudents = [];
+
   expelledStudents.push(student);
   student.isExpelled = true;
   document.querySelector(".expel_button").classList.add("hide");
-  // console.log("expelledStudents", expelledStudents);
-  // console.log(student);
   showDetails(student);
   buildList();
 }
@@ -489,9 +490,3 @@ function sortByHouse(a, b) {
     return 1;
   }
 }
-
-// function expelStudent() {
-//   console.log("expelStudent");
-//   const selectedStudent = document.querySelector("[data-field=name]");
-
-// }
