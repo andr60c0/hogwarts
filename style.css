@@ -12,7 +12,7 @@ body {
 
 .welcome_p {
   font-family: "Booter - Zero Zero";
-  font-size: 5rem;
+  font-size: 3rem;
   text-align: center;
   font-weight: 300;
   margin-top: 100px;
@@ -21,7 +21,7 @@ h1 {
   font-family: "Booter - Zero Zero";
   font-style: normal;
   font-weight: 600;
-  font-size: 4rem;
+  font-size: 3rem;
   margin: 30px 0 20px 0;
   color: var(--primary-text-color);
   text-transform: uppercase;
@@ -30,7 +30,7 @@ h2 {
   font-family: "Booter - Zero Zero";
   font-style: normal;
   font-weight: 600;
-  font-size: 3.5rem;
+  font-size: 2rem;
   margin: 30px 0 0px 0;
   color: var(--primary-text-color);
   text-transform: uppercase;
@@ -39,22 +39,22 @@ h2 {
 p,
 td {
   font-family: "Snell roundhand";
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   color: var(--primary-text-color);
 }
 
 th {
   font-family: "Booter - Zero Zero";
   text-transform: uppercase;
-  font-size: 3.5rem;
-  padding: 100px 380px 50px 0px;
+  font-size: 2.5rem;
+  padding: 100px 190px 50px 0px;
   color: var(--primary-text-color);
   text-align: start;
 }
 
 .house_crest {
   margin-top: 35px;
-  width: 30%;
+  width: 40%;
 }
 
 p {
@@ -62,19 +62,19 @@ p {
 }
 
 .number_of_students p {
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding-top: 10px;
 }
 .number_of_students {
   display: flex;
   margin-top: 50px;
+  justify-content: center;
 }
 .col {
-  padding-left: 100px;
   padding-bottom: 100px;
 }
-.col:nth-child(1) {
-  margin-left: 650px;
+.col:nth-child(2) {
+  padding-left: 50px;
 }
 
 /**************** FONT STYLE AND SIZE DONE ****************/
@@ -83,12 +83,13 @@ button,
 option {
   background-color: transparent;
   border: 1px solid var(--border-color);
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-family: "Snell roundhand";
   letter-spacing: 1px;
 }
 button {
-  margin-top: 30px;
+  margin-top: 20px;
+  margin-bottom: 40px;
   min-width: 170px;
 }
 /**************** BUTTONS DONE ****************/
@@ -98,7 +99,7 @@ select,
 input {
   background-color: transparent;
   border: 1px solid black;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-family: "EB Garamond";
   font-style: italic;
   letter-spacing: 1px;
@@ -107,7 +108,7 @@ input {
 label {
   font-family: "EB Garamond";
   font-style: italic;
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding: 5px;
   margin: 30px 50px 0 50px;
   letter-spacing: 1px;
@@ -139,21 +140,21 @@ table {
 }
 
 [data-field="name"]:hover {
-  font-size: 3rem;
+  font-size: 2rem;
 }
 
 .bar {
   display: inline;
   font-family: "EB Garamond";
   font-style: italic;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin-left: auto;
   margin-right: auto;
 }
 
 .logo {
   width: 20%;
-  margin-left: 850px;
+  margin-left: 570px;
   margin-top: 100px;
 }
 
@@ -166,7 +167,7 @@ table {
   width: 35%;
   position: fixed;
   top: 30px;
-  left: 700px;
+  left: 460px;
   pointer-events: none;
 }
 
@@ -225,15 +226,15 @@ table {
 }
 
 .student_picture {
-  width: 30%;
+  width: 40%;
 }
 
 #closebutton {
   border: none;
   font-style: normal;
-  font-size: 4rem;
+  font-size: 3rem;
   cursor: pointer;
-  padding-left: 1100px;
+  padding-left: 600px;
 }
 
 /*HOUSE THEMES START*/
@@ -259,8 +260,8 @@ table {
 .hackerintro {
   position: fixed;
   top: 15vw;
-  left: 15vw;
-  font-size: 7rem;
+  left: 12vw;
+  font-size: 5rem;
   font-weight: 400;
   font-family: "Snell Roundhand";
   font-style: italic;

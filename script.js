@@ -316,7 +316,7 @@ function showDetails(student) {
     student.lastName;
 
   document.querySelector(".student_picture").src =
-    "/student_images/" + student.image;
+    "student_images/" + student.image;
 
   //EXPEL START
   if (student.isExpelled === true) {
@@ -495,7 +495,7 @@ function showDetails(student) {
     student.bloodStatus === "Muggle blood"
   ) {
     document.querySelector(".inq_squad_status").textContent =
-      "This student cannot be a part of the inquisitorial squad due as they do not have bloodstatus of Pure";
+      "This student cannot be a part of the inquisitorial squad as they do not have bloodstatus of Pure";
     document.querySelector(".inq_button").classList.add("hide");
   }
 
