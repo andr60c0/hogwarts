@@ -9,20 +9,37 @@
   </head>
   <body>
     <!-- <h1 class="header">Hacked Hogwarts <br />Student List</h1> -->
-    <div class="interface_wrapper">
-      <div class="interface_col">
-        <img
-          class="headerpicture"
-          src="images/headerpicture.svg"
-          alt="headerpicture"
-        />
+    <div class="intro fadeOut">
+      <img src="images/headerpicture.svg" />
+    </div>
+    <div class="interface_wrapper hide">
+      <div class="hacker_button">
+        <img class="logo" src="images/hogwarts_logo.png" />
       </div>
-      <div class="interface_col">
-        <div class="wrapper">
-          <div class="search_wrapper">
-            Search Student:
-            <input type="text" id="search-input" placeholder=" Search" />
-          </div>
+      <h1 class="welcome_p">
+        Student list <br />
+        Hogwarts school of witchcraft and wizardry<br />
+        Class of 1991
+      </h1>
+
+      <div class="number_of_students">
+        <div class="col">
+          <p class="gryffindor_students"></p>
+          <p class="hufflepuff_students"></p>
+          <p class="ravenclaw_students"></p>
+          <p class="slytherin_students"></p>
+        </div>
+        <div class="col">
+          <p class="all_students"></p>
+          <p class="expelled_students"></p>
+        </div>
+      </div>
+
+      <div class="wrapper">
+        <div class="bar">
+          Search Student:
+          <input type="text" id="search_input" placeholder=" Search" />
+
           <label id="filter_list">
             Filter by:
             <select name="filterlist" id="filterlist">
@@ -38,6 +55,7 @@
               </option>
             </select>
           </label>
+
           <label id="sort_list">
             Sort by:
             <select name="sortlist" id="sortlist">
@@ -47,14 +65,7 @@
             </select>
           </label>
         </div>
-        <div class="number_of_students">
-          <p class="gryffindor_students"></p>
-          <p class="hufflepuff_students"></p>
-          <p class="ravenclaw_students"></p>
-          <p class="slytherin_students"></p>
-          <p class="all_students"></p>
-          <p class="expelled_students"></p>
-        </div>
+
         <table id="list">
           <thead>
             <tr>
@@ -81,24 +92,32 @@
         <!-- <section id="popUp" class="hide"></section> -->
         <section id="popUp" class="hide">
           <article id="popUp_article">
-            <div class="sectionwrapper">
-              <div class="studentinfo_col">
-                <button id="closebutton">X</button><br /><br />
-                <img src="" class="student_picture" alt="student_picture" />
-                <div class="student_info">
-                  <p>STUDENT NAME</p>
+            <div class="studentinfo_col">
+              <button id="closebutton">X</button><br /><br />
+
+              <div class="student_info">
+                <div class="stud">
+                  <img src="" class="student_picture" alt="student_picture" />
+                  <h1>STUDENT NAME</h1>
                   <p class="full_name"></p>
-                  <p>HOUSE</p>
-                  <p class="house"></p>
-                  <p>ENROLLMENT STATUS</p>
+                  <h2>MEMBER OF HOUSE</h2>
+                  <img src="" alt="housecrest" class="house_crest" />
+                </div>
+                <div class="stud">
+                  <h2>ENROLLMENT STATUS</h2>
                   <p class="enrollment_status"></p>
+
+                  <img
+                    src="images/Expelled.svg"
+                    class="expelled_logo hide"
+                  /><br />
                   <button class="expel_button"></button>
-                  <p>PREFECT STATUS</p>
+                  <h2>PREFECT STATUS</h2>
                   <p class="prefect_status">Not a prefect</p>
                   <button class="prefect_button"></button>
-                  <p>BLOOD STATUS</p>
+                  <h2>BLOOD STATUS</h2>
                   <p class="blood_status"></p>
-                  <p>INQUISITORIAL SQUAD</p>
+                  <h2>INQUISITORIAL SQUAD</h2>
                   <p class="inq_squad_status"></p>
                   <button class="inq_button"></button>
                 </div>
@@ -121,6 +140,11 @@
         </div>
       </div>
     </div>
+
+    <h1 id="hackerintro" class="hackerintro hide">
+      I solemnly swear I am up to no good
+    </h1>
+
     <script src="script.js"></script>
   </body>
 </html>

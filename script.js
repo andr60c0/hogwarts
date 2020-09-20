@@ -8,9 +8,11 @@ let hufflepuffPrefects = [];
 let ravenclawPrefects = [];
 let slytherinPrefects = [];
 let expelledStudents = [];
+let inqSquad = [];
 let bloodStatus = {};
 let currentFilter = "all_students";
 let currentSort = "name";
+let hasBeenHacked = false;
 
 //The prototype for all students
 const Student = {
@@ -91,7 +93,7 @@ function setFilter() {
     const onlyExpelled = expelledStudents;
     return onlyExpelled;
   } else if (currentFilter === "inq_squad") {
-    const onlyInqMembers = allStudents.filter(inInqSquad);
+    const onlyInqMembers = inqSquad;
     return onlyInqMembers;
   } else {
     return allStudents;
@@ -212,7 +214,7 @@ function prepareObject(jsonObject) {
         lastName.substring(1).toLowerCase();
     }
   } else {
-    lastName = "";
+    lastName = "undefined";
   }
 
   let image = lastName + "_" + firstName.substring(0, 1) + ".png";
@@ -221,6 +223,10 @@ function prepareObject(jsonObject) {
   }
   if (image.includes("Patil")) {
     image = lastName + "_" + firstName + ".png";
+  }
+
+  if (image.includes("undefined")) {
+    image = "anonymous.jpg";
   }
   image = image.toLowerCase();
 
@@ -231,6 +237,7 @@ function prepareObject(jsonObject) {
   student.lastName = lastName;
   student.house = capitalize(house);
   student.image = image;
+  student.canBeExpelled = true;
 
   return student;
 }
@@ -264,6 +271,8 @@ function displayList(students) {
     allStudents.filter((student) => student.house === "Slytherin").length;
   document.querySelector(".expelled_students").textContent =
     "Expelled Students: " + expelledStudents.length;
+  document.querySelector(".all_students").textContent =
+    "Enrolled students: " + allStudents.length;
 
   //Build a new list
   students.forEach(displayStudent);
@@ -306,15 +315,16 @@ function showDetails(student) {
     student.nickname +
     " " +
     student.lastName;
-  document.querySelector(".house").textContent = student.house;
+
   document.querySelector(".student_picture").src =
     "/student_images/" + student.image;
 
   //EXPEL
   if (student.isExpelled === true) {
     document.querySelector(".enrollment_status").textContent = "Expelled";
-    document.querySelector(".expel_button").textContent = "Re-enroll";
+    document.querySelector(".expel_button").classList.add("hide");
   } else {
+    document.querySelector(".expel_button").classList.remove("hide");
     document.querySelector(".enrollment_status").textContent = "Enrolled";
     document.querySelector(".expel_button").textContent = "Expel";
   }
@@ -387,50 +397,105 @@ function showDetails(student) {
     document.querySelector(".inq_button").textContent = "Make as member";
   }
 
-  document
-    .querySelector(".inq_button")
-    .addEventListener("click", inqSquadStatus);
-  document
-    .querySelector(".inq_button")
-    .addEventListener("click", inqSquadStatus);
-
-  function inqSquadStatus() {
-    console.log("inqSquadStatus");
+  if (student.inInqSquad === false) {
     document
       .querySelector(".inq_button")
-      .removeEventListener("click", inqSquadStatus);
-    if (student.inInqSquad === false) {
-      addToInqSquad(student);
-    } else {
-      removeFromInqSquad(student);
-    }
+      .addEventListener("click", addToInqSquad);
+  } else {
+    document
+      .querySelector(".inq_button")
+      .addEventListener("click", removeFromInqSquad);
+  }
+
+  function addToInqSquad() {
+    console.log("addToInqSquad");
+    document
+      .querySelector(".inq_button")
+      .removeEventListener("click", addToInqSquad);
+
+    addInqSquadMember(student);
+  }
+
+  function removeFromInqSquad() {
+    console.log("removeFromInqSquad");
+    document
+      .querySelector(".inq_button")
+      .removeEventListener("click", removeFromInqSquad);
+
+    removeInqSquadMember(student);
+  }
+
+  //HOUSE THEMES
+  if (student.house == "Gryffindor") {
+    document;
+    setTheme("gryffindor_theme");
+    document.querySelector(".house_crest").src = "images/gryffindorcrest.png";
+  } else if (student.house == "Hufflepuff") {
+    setTheme("hufflepuff_theme");
+    document.querySelector(".house_crest").src = "images/hufflepuffcrest.png";
+  } else if (student.house == "Ravenclaw") {
+    setTheme("ravenclaw_theme");
+    document.querySelector(".house_crest").src = "images/ravenclawcrest.png";
+  } else if (student.house == "Slytherin") {
+    setTheme("slytherin_theme");
+    document.querySelector(".house_crest").src = "images/slytherincrest.png";
   }
 }
 
+function setTheme(themeName) {
+  localStorage.setItem("theme", themeName);
+  document.documentElement.className = themeName;
+}
+
 function expelStudent(student) {
+  document
+    .querySelector(".ok_button")
+    .removeEventListener("click", expelStudent);
+
   console.log("expelStudent");
-  if (student.isPrefect === true) {
+  if (student.canBeExpelled === false) {
     document.querySelector("#confirmation").classList.remove("hide");
     document.querySelector(".prefect_confirmation").textContent =
-      student.firstName +
-      " " +
-      student.lastName +
-      " is a prefect. To continue with expulsion, please remove student as prefect.";
+      "This student cannot be expelled";
     document.querySelector(".ok_button").addEventListener("click", () => {
       document.querySelector("#confirmation").classList.add("hide");
     });
   } else {
-    allStudents.splice(allStudents.indexOf(student), 1);
-    expelledStudents.push(student);
-    student.isExpelled = true;
-    document.querySelector(".expel_button").classList.add("hide");
-    showDetails(student);
+    if (student.isPrefect === true) {
+      document.querySelector("#confirmation").classList.remove("hide");
+      document.querySelector(".prefect_confirmation").textContent =
+        student.firstName +
+        " " +
+        student.lastName +
+        " is a prefect. To continue with expulsion, please remove student as prefect.";
+      document.querySelector(".ok_button").addEventListener("click", () => {
+        document.querySelector("#confirmation").classList.add("hide");
+      });
+    } else {
+      allStudents.splice(allStudents.indexOf(student), 1);
+      expelledStudents.push(student);
+      student.isExpelled = true;
+    }
+
     buildList();
+    showDetails(student);
   }
 }
 function removeAsPrefect(student) {
   console.log("removeAsPrefect");
   student.isPrefect = false;
+  let prefectArray = [];
+
+  if (student.house === "Gryffindor") {
+    prefectArray = gryffindorPrefects;
+  } else if (student.house === "Hufflepuff") {
+    prefectArray = hufflepuffPrefects;
+  } else if (student.house === "Ravenclaw") {
+    prefectArray = ravenclawPrefects;
+  } else if (student.house === "Slytherin") {
+    prefectArray = slytherinPrefects;
+  }
+  prefectArray.splice(prefectArray.indexOf(student), 1);
   showDetails(student);
   buildList();
   console.log(student);
@@ -471,6 +536,11 @@ function switchPrefect(student, prefectArray) {
   const prefectButton1 = document.querySelector(".prefect1");
   const prefectButton2 = document.querySelector(".prefect2");
 
+  document
+    .querySelector(".close_warning_button")
+    .addEventListener("click", () => {
+      document.querySelector("#remove_other").classList.add("hide");
+    });
   prefectButton1.textContent =
     prefectArray[0].firstName + " " + prefectArray[0].lastName;
   prefectButton2.textContent =
@@ -486,7 +556,7 @@ function switchPrefect(student, prefectArray) {
 
   function replacePrefect2() {
     console.log("removePrefect2");
-    replacePrefect(prefectArray, student, prefectArray[0]);
+    replacePrefect(prefectArray, student, prefectArray[1]);
   }
 }
 
@@ -516,10 +586,13 @@ function replacePrefect(prefectArray, student, replacedStudent) {
   buildList();
 }
 
-function addToInqSquad(student) {
-  console.log("addToInqSquad");
+removeInqSquadMember;
+
+function addInqSquadMember(student) {
+  console.log("addInqSquadMember");
   if (student.bloodStatus === "Pure blood") {
     student.inInqSquad = true;
+    inqSquad.push(student);
     showDetails(student);
     buildList();
   } else {
@@ -532,9 +605,10 @@ function addToInqSquad(student) {
   }
 }
 
-function removeFromInqSquad(student) {
+function removeInqSquadMember(student) {
   console.log("removeFromInqSquad");
   student.inInqSquad = false;
+  inqSquad.splice(inqSquad.indexOf(student), 1);
   showDetails(student);
   buildList();
 }
@@ -623,3 +697,111 @@ function sortByHouse(a, b) {
     return 1;
   }
 }
+document
+  .querySelector(".hacker_button")
+  .addEventListener("click", hackTheSystem);
+
+function hackTheSystem() {
+  document
+    .querySelector(".hacker_button")
+    .removeEventListener("click", hackTheSystem);
+  console.log("hackTheSystem");
+  hasBeenHacked = true;
+
+  //Interface fades out
+
+  document.querySelector(".interface_wrapper").classList.remove("fadeIn");
+  document.querySelector(".interface_wrapper").classList.add("fadeOut");
+  //When that is over, "I solemly swear i am up to no good" fades in
+  document
+    .querySelector(".interface_wrapper")
+    .addEventListener("animationend", hackerHeadingFadeIn);
+
+  function hackerHeadingFadeIn() {
+    console.log("fadeIn");
+    document.querySelector("#hackerintro").classList.remove("hide");
+    document.querySelector("#hackerintro").classList.add("fadeIn");
+    //When that is over, "I solemly swear i am up to no good" fades out
+    document
+      .querySelector("#hackerintro")
+      .addEventListener("animationend", hackerHeadingFadeOut);
+  }
+
+  function hackerHeadingFadeOut() {
+    console.log("hackerHeadingFadeOut");
+    document.querySelector("#hackerintro").classList.remove("fadeIn");
+    document.querySelector("#hackerintro").classList.add("fadeOut");
+    //When that is over interface fades in again
+    document
+      .querySelector("#hackerintro")
+      .addEventListener("animationend", interfaceFadeIn);
+  }
+
+  function interfaceFadeIn() {
+    console.log("interfaceFadeIn");
+
+    document.querySelector(".interface_wrapper").classList.remove("fadeOut");
+    document.querySelector(".interface_wrapper").classList.add("fadeIn");
+    document
+      .querySelector(".interface_wrapper")
+      .addEventListener("animationend", () => {
+        document.querySelector(".hackerintro").classList.add("hide");
+      });
+  }
+
+  //Injecting myself
+  const myself = Object.create(Student);
+  myself.firstName = "Andrea";
+  myself.lastName = "Valgeirsdottir";
+  myself.middlename = "";
+  myself.nickname = "";
+  myself.image = "anonymous.jpg";
+  myself.house = "Gryffindor";
+  myself.isPrefect = false;
+  myself.inInqSquad = false;
+  myself.isExpelled = false;
+  myself.canBeExpelled = false;
+  myself.bloodStatus = "Half-blood";
+  console.log(myself);
+  allStudents.push(myself);
+  buildList();
+
+  //Randomizing bloodstatus
+  randomizeBloodStatus(student);
+
+  //Removing Inq squad members
+}
+
+function randomizeBloodStatus(student) {
+  allStudents.forEach((student) => {
+    if (
+      student.bloodStatus === "Pure blood" &&
+      student.canBeExpelled === true
+    ) {
+      const randomizeBloodTypes = ["Pure blood", "Half blood", "Muggle blood"];
+      console.log(student.bloodStatus);
+      student.bloodStatus =
+        randomizeBloodTypes[
+          Math.floor(Math.random() * randomizeBloodTypes.length)
+        ];
+      console.log(student.bloodStatus);
+    } else {
+      student.bloodStatus = "Pure blood";
+      console.log(student.bloodStatus);
+    }
+  });
+}
+
+function introFadeOut() {
+  console.log("introFadeOut");
+  document.querySelector(".intro").classList.remove("fadeOut");
+  document.querySelector(".intro").classList.add("hide");
+}
+
+//Interface skal være hidet til at starte med DONE
+//Headerphoto starts with fadeout class DONE
+//when the header photo animation is done -> take hide from interface away
+document.querySelector(".intro").addEventListener("animationend", () => {
+  document.querySelector(".interface_wrapper").classList.remove("hide");
+  document.querySelector(".interface_wrapper").classList.add("fadeIn");
+});

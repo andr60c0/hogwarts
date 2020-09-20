@@ -3,44 +3,95 @@ body {
   background-size: 100%;
 }
 
+:root {
+  --primary-text-color: #27344a;
+  --border-color: black;
+}
+
 /**************** FONT STYLE AND SIZE START ****************/
 
-.header {
-  font-family: "EB Garamond";
+.welcome_p {
+  font-family: "Booter - Zero Zero";
+  font-size: 5rem;
+  text-align: center;
+  font-weight: 300;
+  margin-top: 100px;
+}
+h1 {
+  font-family: "Booter - Zero Zero";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 4rem;
+  margin: 30px 0 20px 0;
+  color: var(--primary-text-color);
   text-transform: uppercase;
-  letter-spacing: 5px;
-  font-size: 8rem;
+}
+h2 {
+  font-family: "Booter - Zero Zero";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 3.5rem;
+  margin: 30px 0 0px 0;
+  color: var(--primary-text-color);
+  text-transform: uppercase;
 }
 
 p,
 td {
-  font-family: "EB Garamond";
-  font-size: 2rem;
-  font-style: italic;
-  color: #10141b;
+  font-family: "Snell roundhand";
+  font-size: 2.5rem;
+  color: var(--primary-text-color);
 }
 
 th {
-  font-family: "Mason Sans OT";
+  font-family: "Booter - Zero Zero";
   text-transform: uppercase;
-  font-size: 2.5rem;
-  padding: 50px 80px 50px 0px;
-  color: #10141b;
+  font-size: 3.5rem;
+  padding: 100px 380px 50px 0px;
+  color: var(--primary-text-color);
+  text-align: start;
 }
 
-.student_info p:nth-child(1),
-.student_info p:nth-child(3),
-.student_info p:nth-child(5),
-.student_info p:nth-child(8),
-.student_info p:nth-child(11),
-.student_info p:nth-child(13) {
-  font-family: "Mason Sans OT";
-  font-style: normal;
-  font-weight: 600;
-  color: #303338;
+.house_crest {
+  margin-top: 35px;
+  width: 30%;
+}
+
+p {
+  margin: 0;
+}
+
+.number_of_students p {
+  font-size: 2rem;
+  padding-top: 10px;
+}
+.number_of_students {
+  display: flex;
+  margin-top: 50px;
+}
+.col {
+  padding-left: 100px;
+  padding-bottom: 100px;
+}
+.col:nth-child(1) {
+  margin-left: 650px;
 }
 
 /**************** FONT STYLE AND SIZE DONE ****************/
+/**************** BUTTONS START ****************/
+button,
+option {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  font-size: 2rem;
+  font-family: "Snell roundhand";
+  letter-spacing: 1px;
+}
+button {
+  margin-top: 30px;
+  min-width: 170px;
+}
+/**************** BUTTONS DONE ****************/
 
 /**************** FILTER,SORT AND SEARCH STYLING START ****************/
 select,
@@ -53,30 +104,17 @@ input {
   letter-spacing: 1px;
 }
 
-label,
-.search_wrapper {
+label {
   font-family: "EB Garamond";
   font-style: italic;
   font-size: 2rem;
   padding: 5px;
   margin: 30px 50px 0 50px;
   letter-spacing: 1px;
+  color: #27344a;
 }
 
 /**************** FILTER,SORT AND SEARCH STYLING DONE ****************/
-
-/**************** BUTTONS START ****************/
-button,
-option {
-  background-color: transparent;
-  border: 1px solid black;
-  font-size: 1.5rem;
-  font-family: "EB Garamond";
-  font-style: italic;
-  letter-spacing: 1px;
-}
-
-/**************** BUTTONS DONE ****************/
 
 /**************** INTERFACE START ****************/
 [data-field="prefect_logo"] img {
@@ -88,14 +126,7 @@ option {
 }
 
 table {
-  /* margin-left: auto;
-  margin-right: auto; */
   padding-bottom: 300px;
-}
-
-.headerpicture {
-  width: 80%;
-  margin-bottom: 100px;
 }
 
 .wrapper {
@@ -108,18 +139,35 @@ table {
 }
 
 [data-field="name"]:hover {
-  font-size: 2.5rem;
+  font-size: 3rem;
 }
 
-.interface_wrapper {
-  display: flex;
-  justify-content: end;
-  flex-direction: row-reverse;
+.bar {
+  display: inline;
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-size: 2rem;
+  margin-left: auto;
+  margin-right: auto;
 }
-.interface_col {
-  flex-grow: 1;
-  flex-basis: 300px;
-  margin: 100px;
+
+.logo {
+  width: 20%;
+  margin-left: 850px;
+  margin-top: 100px;
+}
+
+#list {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.intro img {
+  width: 35%;
+  position: fixed;
+  top: 30px;
+  left: 700px;
+  pointer-events: none;
 }
 
 /**************** INTERFACE SLUT ****************/
@@ -128,46 +176,56 @@ table {
 .dialog,
 #confirmation {
   position: fixed;
-  top: 10vw;
-  left: 50vw;
-  width: 20%;
-
+  top: 4vw;
+  left: 30vw;
+  width: 40%;
   text-align: center;
   background-image: url(images/background1.png);
   background-size: 100%;
+  padding: 20px;
+
+  border: 4px solid var(--border-color);
 }
 
 .hide {
   display: none;
 }
 
+.expelled_logo {
+  pointer-events: none;
+}
+
 #popUp {
   overflow: scroll;
   position: fixed;
   top: 0;
-  left: 50vw;
-  width: 50%;
+  left: 15vw;
+  width: 70%;
   height: 100vh;
   text-align: center;
   /* background-image: url(images/background1.png); */
   /* background-color: white; */
 }
 
-.sectionwrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 .studentinfo_col {
-  border: 5px solid black;
+  border: 5px solid var(--border-color);
   border-radius: 10px;
   margin: 0 100px 100px 100px;
   padding-bottom: 100px;
   background-image: url(images/background1.png);
 }
 
+.student_info {
+  display: flex;
+}
+
+.stud {
+  flex-grow: 1;
+  flex-basis: 300px;
+}
+
 .student_picture {
-  width: 20%;
+  width: 30%;
 }
 
 #closebutton {
@@ -175,7 +233,78 @@ table {
   font-style: normal;
   font-size: 4rem;
   cursor: pointer;
-  padding-left: 800px;
+  padding-left: 1100px;
 }
 
+/*HOUSE THEMES START*/
+.gryffindor_theme {
+  --border-color: #953238;
+}
+.hufflepuff_theme {
+  --border-color: #fae95f;
+}
+.ravenclaw_theme {
+  --border-color: #2c3288;
+}
+.slytherin_theme {
+  --border-color: #185626;
+}
+
+/*HOUSE THEMES DONE*/
+
 /**************** POP UP SLUT ****************/
+
+/**************** HACKER MODE START ****************/
+
+.hackerintro {
+  position: fixed;
+  top: 15vw;
+  left: 15vw;
+  font-size: 7rem;
+  font-weight: 400;
+  font-family: "Snell Roundhand";
+  font-style: italic;
+  color: #27344a;
+  text-transform: none;
+}
+
+/**************** HACKER MODE DONE ****************/
+
+/**************** ANIMATIONS START ****************/
+
+.fadeOut {
+  animation-name: fadeOut_kf;
+  animation-duration: 3s;
+  animation-iteration-count: 1;
+  animation-fill-mode: both;
+
+  animation-timing-function: ease-in;
+}
+
+@keyframes fadeOut_kf {
+  0% {
+    opacity: 100%;
+  }
+
+  100% {
+    opacity: 0%;
+  }
+}
+
+.fadeIn {
+  animation-name: fadeIn_kf;
+  animation-duration: 4s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in;
+}
+
+@keyframes fadeIn_kf {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/**************** ANIMATIONS DONE ****************/
