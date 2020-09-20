@@ -8,7 +8,7 @@ let hufflepuffPrefects = [];
 let ravenclawPrefects = [];
 let slytherinPrefects = [];
 let expelledStudents = [];
-let inqSquad = [];
+// let inqSquad = [];
 let bloodStatus = {};
 let currentFilter = "all_students";
 let currentSort = "name";
@@ -93,7 +93,7 @@ function setFilter() {
     const onlyExpelled = expelledStudents;
     return onlyExpelled;
   } else if (currentFilter === "inq_squad") {
-    const onlyInqMembers = inqSquad;
+    const onlyInqMembers = allStudents.filter(inInqSquad);
     return onlyInqMembers;
   } else {
     return allStudents;
@@ -304,7 +304,6 @@ function displayStudent(student) {
 function showDetails(student) {
   console.log("showDetails");
 
-  // document.querySelector("#popUp").innerHTML = "";
   document.querySelector("#popUp").classList.remove("hide");
 
   document.querySelector(".full_name").textContent =
@@ -319,7 +318,7 @@ function showDetails(student) {
   document.querySelector(".student_picture").src =
     "/student_images/" + student.image;
 
-  //EXPEL
+  //EXPEL START
   if (student.isExpelled === true) {
     document.querySelector(".enrollment_status").textContent = "Expelled";
     document.querySelector(".expel_button").classList.add("hide");
@@ -327,57 +326,142 @@ function showDetails(student) {
     document.querySelector(".expel_button").classList.remove("hide");
     document.querySelector(".enrollment_status").textContent = "Enrolled";
     document.querySelector(".expel_button").textContent = "Expel";
-  }
-
-  //Adding eventlistener to expel button
-
-  document
-    .querySelector(".expel_button")
-    .addEventListener("click", enrollmentStatus);
-
-  function enrollmentStatus() {
-    console.log("enrollmentStatus");
     document
       .querySelector(".expel_button")
-      .removeEventListener("click", enrollmentStatus);
-
-    expelStudent(student);
-  }
-  // PREFECTS
-  if (student.isPrefect === true) {
-    document.querySelector(".prefect_status").textContent = "Active prefect";
-    document.querySelector(".prefect_button").textContent = "Remove as prefect";
-  } else {
-    document.querySelector(".prefect_status").textContent = "Not a prefect";
-    document.querySelector(".prefect_button").textContent = "Make as prefect";
+      .addEventListener("click", expelStudent);
   }
 
-  //Adding event listener to prefect button
-  if (student.isPrefect === false) {
+  function expelStudent() {
     document
-      .querySelector(".prefect_button")
-      .addEventListener("click", addPrefect);
-  } else {
+      .querySelector(".inq_button")
+      .removeEventListener("click", removeFromInqSquad);
     document
-      .querySelector(".prefect_button")
-      .addEventListener("click", removePrefect);
-  }
-  //Removing the eventlistener from the prefect button and calling the function that checks if there is space for a prefect
-  function addPrefect() {
-    console.log("addPrefect");
+      .querySelector(".inq_button")
+      .removeEventListener("click", addToInqSquad);
+    document
+      .querySelector(".expel_button")
+      .removeEventListener("click", expelStudent);
     document
       .querySelector(".prefect_button")
       .removeEventListener("click", addPrefect);
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", removePrefect);
+
+    console.log("expelStudent");
+    if (student.canBeExpelled === false) {
+      document.querySelector("#confirmation").classList.remove("hide");
+      document.querySelector(".prefect_confirmation").textContent =
+        "This student cannot be expelled";
+      document.querySelector(".ok_button").addEventListener("click", () => {
+        document.querySelector("#confirmation").classList.add("hide");
+      });
+    } else {
+      if (student.isPrefect === true) {
+        document.querySelector("#confirmation").classList.remove("hide");
+        document.querySelector(".prefect_confirmation").textContent =
+          student.firstName +
+          " " +
+          student.lastName +
+          " is a prefect. To continue with expulsion, please remove student as prefect.";
+        document.querySelector(".ok_button").addEventListener("click", () => {
+          document.querySelector("#confirmation").classList.add("hide");
+        });
+      } else if (
+        student.isExpelled === false &&
+        student.canBeExpelled === true
+      ) {
+        allStudents.splice(allStudents.indexOf(student), 1);
+        expelledStudents.push(student);
+        student.isExpelled = true;
+        buildList();
+        showDetails(student);
+      }
+    }
+  }
+  //EXPEL DONE
+
+  // PREFECTS START
+  if (student.isPrefect === true) {
+    document.querySelector(".prefect_status").textContent = "Active prefect";
+    document.querySelector(".prefect_button").textContent = "Remove as prefect";
+    document
+      .querySelector(".prefect_button")
+      .addEventListener("click", removePrefect);
+  } else {
+    document.querySelector(".prefect_status").textContent = "Not a prefect";
+    document.querySelector(".prefect_button").textContent = "Make as prefect";
+    document
+      .querySelector(".prefect_button")
+      .addEventListener("click", addPrefect);
+  }
+
+  function addPrefect() {
+    console.log("addPrefect");
+    document
+      .querySelector(".inq_button")
+      .removeEventListener("click", removeFromInqSquad);
+    document
+      .querySelector(".inq_button")
+      .removeEventListener("click", addToInqSquad);
+    document
+      .querySelector(".expel_button")
+      .removeEventListener("click", expelStudent);
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", addPrefect);
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", removePrefect);
     // togglePrefectStatus(student);
-    checkNumberOfPrefects(student);
+
+    // console.log(prefectArray);
+    let prefectArray = [];
+
+    if (student.house === "Gryffindor") {
+      prefectArray = gryffindorPrefects;
+    } else if (student.house === "Hufflepuff") {
+      prefectArray = hufflepuffPrefects;
+    } else if (student.house === "Ravenclaw") {
+      prefectArray = ravenclawPrefects;
+    } else if (student.house === "Slytherin") {
+      prefectArray = slytherinPrefects;
+    }
+    if (prefectArray.length < 2) {
+      student.isPrefect = true;
+      prefectArray.push(student);
+      showDetails(student);
+      buildList();
+      // console.log(student);
+    } else if (prefectArray.length > 1) {
+      switchPrefect(student, prefectArray);
+    }
   }
 
   function removePrefect() {
     console.log("removePrefect");
     document
+      .querySelector(".inq_button")
+      .removeEventListener("click", removeFromInqSquad);
+    document
+      .querySelector(".inq_button")
+      .removeEventListener("click", addToInqSquad);
+    document
+      .querySelector(".expel_button")
+      .removeEventListener("click", expelStudent);
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", addPrefect);
+    document
       .querySelector(".prefect_button")
       .removeEventListener("click", removePrefect);
-    removeAsPrefect(student);
+
+    student.isPrefect = false;
+    //TODO: Remove student from prefectArray
+    // prefectArray.splice(prefectArray.indexOf(student), 1);
+    showDetails(student);
+    buildList();
+    console.log(student);
   }
 
   document.querySelector("#closebutton").addEventListener("click", () => {
@@ -392,37 +476,66 @@ function showDetails(student) {
   if (student.inInqSquad === true) {
     document.querySelector(".inq_squad_status").textContent = "Active member";
     document.querySelector(".inq_button").textContent = "Remove as member";
-  } else {
-    document.querySelector(".inq_squad_status").textContent = "Not a member";
-    document.querySelector(".inq_button").textContent = "Make as member";
-  }
-
-  if (student.inInqSquad === false) {
-    document
-      .querySelector(".inq_button")
-      .addEventListener("click", addToInqSquad);
-  } else {
     document
       .querySelector(".inq_button")
       .addEventListener("click", removeFromInqSquad);
+    document.querySelector(".inq_button").classList.remove("hide");
+  } else if (
+    student.inInqSquad === false &&
+    student.bloodStatus === "Pure blood"
+  ) {
+    document.querySelector(".inq_squad_status").textContent = "Not a member";
+    document.querySelector(".inq_button").textContent = "Make as member";
+    document
+      .querySelector(".inq_button")
+      .addEventListener("click", addToInqSquad);
+    document.querySelector(".inq_button").classList.remove("hide");
+  } else if (
+    student.bloodStatus === "Half blood" ||
+    student.bloodStatus === "Muggle blood"
+  ) {
+    document.querySelector(".inq_squad_status").textContent =
+      "This student cannot be a part of the inquisitorial squad due as they do not have bloodstatus of Pure";
+    document.querySelector(".inq_button").classList.add("hide");
   }
 
   function addToInqSquad() {
     console.log("addToInqSquad");
     document
       .querySelector(".inq_button")
+      .removeEventListener("click", removeFromInqSquad);
+    document
+      .querySelector(".inq_button")
       .removeEventListener("click", addToInqSquad);
+    document
+      .querySelector(".expel_button")
+      .removeEventListener("click", expelStudent);
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", addPrefect);
+    document
+      .querySelector(".prefect_button")
+      .removeEventListener("click", removePrefect);
 
-    addInqSquadMember(student);
+    student.inInqSquad = true;
+    showDetails(student);
+    buildList();
+    console.log("Student pushed to inq squad", student);
   }
 
   function removeFromInqSquad() {
     console.log("removeFromInqSquad");
     document
       .querySelector(".inq_button")
+      .removeEventListener("click", addToInqSquad);
+    document
+      .querySelector(".inq_button")
       .removeEventListener("click", removeFromInqSquad);
 
-    removeInqSquadMember(student);
+    student.inInqSquad = false;
+    showDetails(student);
+    buildList();
+    console.log("Student removed from inq squad", student);
   }
 
   //HOUSE THEMES
@@ -447,86 +560,8 @@ function setTheme(themeName) {
   document.documentElement.className = themeName;
 }
 
-function expelStudent(student) {
-  document
-    .querySelector(".ok_button")
-    .removeEventListener("click", expelStudent);
-
-  console.log("expelStudent");
-  if (student.canBeExpelled === false) {
-    document.querySelector("#confirmation").classList.remove("hide");
-    document.querySelector(".prefect_confirmation").textContent =
-      "This student cannot be expelled";
-    document.querySelector(".ok_button").addEventListener("click", () => {
-      document.querySelector("#confirmation").classList.add("hide");
-    });
-  } else {
-    if (student.isPrefect === true) {
-      document.querySelector("#confirmation").classList.remove("hide");
-      document.querySelector(".prefect_confirmation").textContent =
-        student.firstName +
-        " " +
-        student.lastName +
-        " is a prefect. To continue with expulsion, please remove student as prefect.";
-      document.querySelector(".ok_button").addEventListener("click", () => {
-        document.querySelector("#confirmation").classList.add("hide");
-      });
-    } else {
-      allStudents.splice(allStudents.indexOf(student), 1);
-      expelledStudents.push(student);
-      student.isExpelled = true;
-    }
-
-    buildList();
-    showDetails(student);
-  }
-}
-function removeAsPrefect(student) {
-  console.log("removeAsPrefect");
-  student.isPrefect = false;
-  let prefectArray = [];
-
-  if (student.house === "Gryffindor") {
-    prefectArray = gryffindorPrefects;
-  } else if (student.house === "Hufflepuff") {
-    prefectArray = hufflepuffPrefects;
-  } else if (student.house === "Ravenclaw") {
-    prefectArray = ravenclawPrefects;
-  } else if (student.house === "Slytherin") {
-    prefectArray = slytherinPrefects;
-  }
-  prefectArray.splice(prefectArray.indexOf(student), 1);
-  showDetails(student);
-  buildList();
-  console.log(student);
-}
 //Checking the number of prefects in each house
-function checkNumberOfPrefects(student) {
-  console.log("checkNumberOfPrefects");
-  let prefectArray = [];
-
-  if (student.house === "Gryffindor") {
-    prefectArray = gryffindorPrefects;
-  } else if (student.house === "Hufflepuff") {
-    prefectArray = hufflepuffPrefects;
-  } else if (student.house === "Ravenclaw") {
-    prefectArray = ravenclawPrefects;
-  } else if (student.house === "Slytherin") {
-    prefectArray = slytherinPrefects;
-  }
-
-  // console.log(prefectArray);
-
-  if (prefectArray.length < 2) {
-    student.isPrefect = true;
-    prefectArray.push(student);
-    showDetails(student);
-    buildList();
-    // console.log(student);
-  } else if (prefectArray.length > 1) {
-    switchPrefect(student, prefectArray);
-  }
-}
+function checkNumberOfPrefects(student) {}
 
 function switchPrefect(student, prefectArray) {
   console.log("switchPrefect");
@@ -582,33 +617,6 @@ function replacePrefect(prefectArray, student, replacedStudent) {
   document.querySelector(".ok_button").addEventListener("click", () => {
     document.querySelector("#confirmation").classList.add("hide");
   });
-  showDetails(student);
-  buildList();
-}
-
-removeInqSquadMember;
-
-function addInqSquadMember(student) {
-  console.log("addInqSquadMember");
-  if (student.bloodStatus === "Pure blood") {
-    student.inInqSquad = true;
-    inqSquad.push(student);
-    showDetails(student);
-    buildList();
-  } else {
-    document.querySelector("#confirmation").classList.remove("hide");
-    document.querySelector(".prefect_confirmation").textContent =
-      "This student cannot be a member of Inquisitorial squad do to their blood status";
-    document.querySelector(".ok_button").addEventListener("click", () => {
-      document.querySelector("#confirmation").classList.add("hide");
-    });
-  }
-}
-
-function removeInqSquadMember(student) {
-  console.log("removeFromInqSquad");
-  student.inInqSquad = false;
-  inqSquad.splice(inqSquad.indexOf(student), 1);
   showDetails(student);
   buildList();
 }
@@ -797,7 +805,6 @@ function introFadeOut() {
   document.querySelector(".intro").classList.remove("fadeOut");
   document.querySelector(".intro").classList.add("hide");
 }
-
 //Interface skal være hidet til at starte med DONE
 //Headerphoto starts with fadeout class DONE
 //when the header photo animation is done -> take hide from interface away
