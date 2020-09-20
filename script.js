@@ -560,8 +560,20 @@ function setTheme(themeName) {
   document.documentElement.className = themeName;
 }
 
-//Checking the number of prefects in each house
-function checkNumberOfPrefects(student) {}
+//Virker ikke :)))))
+
+function searchStudents() {
+  console.log("searchStudents");
+  const searchInput = document.querySelector("#search_input").value;
+  const searchCapitalize =
+    searchInput.substring(0, 1).toUpperCase() +
+    searchInput.substring(1).toLowerCase();
+  const searchResults = allStudents.filter((student) =>
+    student.firstName.includes(searchCapitalize)
+  );
+
+  displayList(searchResults);
+}
 
 function switchPrefect(student, prefectArray) {
   console.log("switchPrefect");
